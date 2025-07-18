@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, FileText, Zap } from "lucide-react";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="overflow-x-hidden min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Navigation */}
       <nav className="border-b border-blue-100 px-4 py-4 bg-white/80 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
@@ -557,7 +557,10 @@ export default function Page() {
             {/* <Link href="/terms" className="hover:text-gray-900">
               Terms of Service
             </Link> */}
-            <Link href="/contact" className="hover:text-gray-900">
+            <Link
+              href="mailto:pelagic-orzo.8c@icloud.com"
+              className="hover:text-gray-900"
+            >
               Contact
             </Link>
           </div>
