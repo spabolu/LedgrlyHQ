@@ -41,7 +41,7 @@ export default function Page() {
               asChild
               className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg"
             >
-              <Link href="#Waitlist">Join Waitlist →</Link>
+              <Link href="#waitlist">Join Waitlist →</Link>
             </Button>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function Page() {
             className="hover:cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-4 text-lg font-semibold rounded-lg mb-4 shadow-lg transform hover:scale-102 transition-all duration-200"
             asChild
           >
-            <Link href="#Waitlist">JOIN THE WAITLIST →</Link>
+            <Link href="#waitlist">JOIN THE WAITLIST →</Link>
           </Button>
 
           {/* Prominent Disclaimer */}
