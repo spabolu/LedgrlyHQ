@@ -3,17 +3,19 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, FileText, Zap } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
-export default function LedgrlyLanding() {
+export default function Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Navigation */}
-      <nav className="border-b border-orange-100 px-4 py-4 bg-white/80 backdrop-blur-sm">
+      <nav className="border-b border-blue-100 px-4 py-4 bg-white/80 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-xl font-extrabold text-gray-900">
-              Ledgrly
+          <div className="flex items-center">
+            <span className="w-8 h-8 flex items-center justify-center">
+              <Image src="/ledgrly.svg" alt="Ledgrly" width={64} height={64} />
             </span>
+            <span className="text-xl font-bold text-gray-900">Ledgrly</span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -37,7 +39,7 @@ export default function LedgrlyLanding() {
             </Button> */}
             <Button
               asChild
-              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white shadow-lg"
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg"
             >
               <Link href="#Waitlist">Join Waitlist →</Link>
             </Button>
@@ -48,19 +50,13 @@ export default function LedgrlyLanding() {
       {/* Hero Section */}
       <section className="px-4 py-16 md:py-24 relative overflow-hidden">
         {/* Background Gradient Orbs */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-orange-200 to-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-pink-200 to-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
-
-        <div className="flex justify-center">
-          <p className="inline-flex items-center gap-x-2 rounded-full border border-orange-100 bg-gradient-to-r from-orange-100 to-pink-100 p-1 px-3 text-sm font-semibold text-zinc-800 shadow-sm transition hover:border-orange-200">
-            Under Development
-          </p>
-        </div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-indigo-200 to-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
             Finally,{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">
               Bookkeeping
             </span>{" "}
             That Speaks Etsy.
@@ -71,20 +67,20 @@ export default function LedgrlyLanding() {
             — no manual spreadsheets or CSV imports required.
           </p>
 
-          <p className="text-orange-500 font-semibold mb-8 text-lg">
-            (Built for makers, and craft sellers!)
+          <p className="text-blue-600 font-semibold mb-8 text-lg">
+            (Built for makers, creators, and craft sellers!)
           </p>
 
           <Button
-            asChild
             size="lg"
-            className="hover:cursor-pointer bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-6 py-6 text-lg font-semibold rounded-lg mb-4 shadow-lg transform hover:scale-102 transition-all duration-200"
+            className="hover:cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-4 text-lg font-semibold rounded-lg mb-4 shadow-lg transform hover:scale-102 transition-all duration-200"
+            asChild
           >
             <Link href="#Waitlist">JOIN THE WAITLIST →</Link>
           </Button>
 
           {/* Prominent Disclaimer */}
-          <div className="mb-8 p-3 bg-white/60 backdrop-blur-sm rounded-lg border border-orange-100 max-w-2xl mx-auto">
+          <div className="mb-8 p-3 bg-white/60 backdrop-blur-sm rounded-lg border border-blue-100 max-w-2xl mx-auto">
             <p className="text-sm text-gray-700 font-medium">
               The term &apos;Etsy&apos; is a trademark of Etsy, Inc. This
               application uses the Etsy API but is not endorsed or certified by
@@ -95,33 +91,33 @@ export default function LedgrlyLanding() {
           {/* Social Proof */}
           <div className="flex items-center justify-center space-x-2 mb-12">
             <div className="flex -space-x-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-orange-400 border-2 border-white flex items-center justify-center shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 border-2 border-white flex items-center justify-center shadow-sm">
                 <span className="text-white text-sm font-semibold">K</span>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-400 border-2 border-white flex items-center justify-center shadow-sm">
-                <span className="text-white text-sm font-semibold">L</span>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 border-2 border-white flex items-center justify-center shadow-sm">
+                <span className="text-white text-sm font-semibold">O</span>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-orange-500 border-2 border-white flex items-center justify-center shadow-sm">
-                <span className="text-white text-sm font-semibold">B</span>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 border-2 border-white flex items-center justify-center shadow-sm">
-                <span className="text-white text-sm font-semibold">S</span>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-600 to-orange-600 border-2 border-white flex items-center justify-center shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white flex items-center justify-center shadow-sm">
                 <span className="text-white text-sm font-semibold">A</span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-white flex items-center justify-center shadow-sm">
+                <span className="text-white text-sm font-semibold">D</span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 border-2 border-white flex items-center justify-center shadow-sm">
+                <span className="text-white text-sm font-semibold">T</span>
               </div>
               <div className="w-10 h-10 rounded-full bg-gray-600 border-2 border-white flex items-center justify-center shadow-sm">
                 <span className="text-white text-xs font-semibold">+8</span>
               </div>
             </div>
-            <span className="text-gray-600 font-medium ml-2">
-              Join many sellers on the waitlist!
+            <span className="text-gray-600 font-medium ml-1">
+              Join +15 handmade sellers on the waitlist!
             </span>
           </div>
 
           {/* Dashboard Preview */}
           <div className="relative max-w-6xl mx-auto">
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-orange-100">
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-blue-100">
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <div className="flex items-center space-x-2 mb-6">
                   <div className="w-3 h-3 bg-red-400 rounded-full"></div>
@@ -132,20 +128,20 @@ export default function LedgrlyLanding() {
 
                 {/* KPI Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="p-4 bg-gradient-to-r from-orange-50 to-pink-50 rounded-lg border border-orange-100">
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
                     <div className="text-sm text-gray-600 mb-1">
                       Gross Sales (MTD)
                     </div>
-                    <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-pink-600">
+                    <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
                       $4,247.50
                     </div>
                     <div className="text-xs text-green-600">↗ +12.5%</div>
                   </div>
-                  <div className="p-4 bg-gradient-to-r from-orange-50 to-pink-50 rounded-lg border border-orange-100">
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
                     <div className="text-sm text-gray-600 mb-1">
                       Net Profit (MTD)
                     </div>
-                    <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-pink-600">
+                    <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
                       $2,355.20
                     </div>
                     <div className="text-xs text-green-600">↗ +8.3%</div>
@@ -155,7 +151,7 @@ export default function LedgrlyLanding() {
                     <div className="text-xl font-bold text-gray-900">
                       $1,234.80
                     </div>
-                    <div className="text-xs text-orange-600">↗ +5.2%</div>
+                    <div className="text-xs text-blue-600">↗ +5.2%</div>
                   </div>
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="text-sm text-gray-600 mb-1">
@@ -175,40 +171,42 @@ export default function LedgrlyLanding() {
                     <h4 className="text-sm font-semibold text-gray-700 mb-3">
                       6-Month Sales vs COGS
                     </h4>
-                    <div className="h-32 flex items-end justify-between space-x-2">
+                    <div className="h-32 flex items-end justify-between space-x-1">
                       {[
-                        { sales: 60, cogs: 35 },
-                        { sales: 75, cogs: 40 },
-                        { sales: 85, cogs: 45 },
-                        { sales: 70, cogs: 38 },
-                        { sales: 90, cogs: 48 },
-                        { sales: 100, cogs: 52 },
-                      ].map((month, i) => (
+                        { sales: 60, cogs: 35, month: "Jul" },
+                        { sales: 75, cogs: 40, month: "Aug" },
+                        { sales: 85, cogs: 45, month: "Sep" },
+                        { sales: 70, cogs: 38, month: "Oct" },
+                        { sales: 90, cogs: 48, month: "Nov" },
+                        { sales: 100, cogs: 52, month: "Dec" },
+                      ].map((data, i) => (
                         <div
                           key={i}
-                          className="flex flex-col items-center space-y-1 flex-1"
+                          className="flex flex-col items-center flex-1"
                         >
-                          <div
-                            className="w-full bg-gradient-to-t from-orange-400 to-orange-300 rounded-t"
-                            style={{ height: `${month.sales}%` }}
-                          ></div>
-                          <div
-                            className="w-full bg-gray-300 rounded-t"
-                            style={{ height: `${month.cogs}%` }}
-                          ></div>
-                          <div className="text-xs text-gray-500">
-                            {["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][i]}
+                          <div className="w-full flex flex-col items-end justify-end h-24 space-y-1">
+                            <div
+                              className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-sm"
+                              style={{ height: `${(data.sales / 100) * 100}%` }}
+                            ></div>
+                            <div
+                              className="w-full bg-gradient-to-t from-gray-400 to-gray-300 rounded-t-sm"
+                              style={{ height: `${(data.cogs / 100) * 100}%` }}
+                            ></div>
+                          </div>
+                          <div className="text-xs text-gray-500 mt-2">
+                            {data.month}
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-center space-x-4 mt-2 text-xs">
+                    <div className="flex items-center justify-center space-x-4 mt-3 text-xs">
                       <div className="flex items-center space-x-1">
-                        <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-orange-300 rounded"></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-blue-400 rounded"></div>
                         <span className="text-gray-600">Sales</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <div className="w-3 h-3 bg-gray-300 rounded"></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-gray-400 to-gray-300 rounded"></div>
                         <span className="text-gray-600">COGS</span>
                       </div>
                     </div>
@@ -234,14 +232,14 @@ export default function LedgrlyLanding() {
                           <path
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                             fill="none"
-                            stroke="#f97316"
+                            stroke="#3b82f6"
                             strokeWidth="2"
                             strokeDasharray="60, 100"
                           />
                           <path
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                             fill="none"
-                            stroke="#ec4899"
+                            stroke="#6366f1"
                             strokeWidth="2"
                             strokeDasharray="25, 100"
                             strokeDashoffset="-60"
@@ -249,7 +247,7 @@ export default function LedgrlyLanding() {
                           <path
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                             fill="none"
-                            stroke="#6b7280"
+                            stroke="#8b5cf6"
                             strokeWidth="2"
                             strokeDasharray="15, 100"
                             strokeDashoffset="-85"
@@ -260,21 +258,21 @@ export default function LedgrlyLanding() {
                     <div className="space-y-2 text-xs">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <div className="w-3 h-3 bg-orange-500 rounded"></div>
+                          <div className="w-3 h-3 bg-blue-500 rounded"></div>
                           <span className="text-gray-600">Transaction</span>
                         </div>
                         <span className="font-semibold">$394.50</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <div className="w-3 h-3 bg-pink-500 rounded"></div>
+                          <div className="w-3 h-3 bg-indigo-500 rounded"></div>
                           <span className="text-gray-600">Processing</span>
                         </div>
                         <span className="font-semibold">$164.25</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <div className="w-3 h-3 bg-gray-500 rounded"></div>
+                          <div className="w-3 h-3 bg-purple-500 rounded"></div>
                           <span className="text-gray-600">Listing</span>
                         </div>
                         <span className="font-semibold">$98.75</span>
@@ -369,11 +367,11 @@ export default function LedgrlyLanding() {
 
       {/* Features Section */}
       <section id="features" className="px-4 py-16 relative">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-pink-100 to-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-orange-100 to-pink-100 text-orange-700 mb-4">
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 mb-4">
               Features
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -387,8 +385,8 @@ export default function LedgrlyLanding() {
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-pink-100 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-orange-600" />
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Automatic Shop Import
@@ -402,8 +400,8 @@ export default function LedgrlyLanding() {
 
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-pink-100 rounded-lg flex items-center justify-center mb-4">
-                  <BarChart3 className="w-6 h-6 text-orange-600" />
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                  <BarChart3 className="w-6 h-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Smart COGS Tracking
@@ -417,8 +415,8 @@ export default function LedgrlyLanding() {
 
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-pink-100 rounded-lg flex items-center justify-center mb-4">
-                  <FileText className="w-6 h-6 text-orange-600" />
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                  <FileText className="w-6 h-6 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Tax-Ready Reports
@@ -435,10 +433,10 @@ export default function LedgrlyLanding() {
 
       {/* How It Works */}
       <section id="how-it-works" className="px-4 py-16 relative">
-        <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-r from-orange-100 to-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div className="absolute top-20 right-1/4 w-80 h-80 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-orange-100 to-pink-100 text-orange-700 mb-4">
+          <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 mb-4">
             How It Works
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
@@ -447,7 +445,7 @@ export default function LedgrlyLanding() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <span className="text-white font-bold text-xl">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -460,7 +458,7 @@ export default function LedgrlyLanding() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <span className="text-white font-bold text-xl">2</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -473,7 +471,7 @@ export default function LedgrlyLanding() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -490,9 +488,9 @@ export default function LedgrlyLanding() {
 
       {/* Waitlist CTA */}
       <section className="px-4 py-16 relative" id="Waitlist">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-50 via-pink-50 to-orange-50"></div>
-        <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-orange-200 to-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
-        <div className="absolute bottom-10 right-10 w-72 h-72 bg-gradient-to-r from-pink-200 to-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50"></div>
+        <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
+        <div className="absolute bottom-10 right-10 w-72 h-72 bg-gradient-to-r from-indigo-200 to-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -504,21 +502,24 @@ export default function LedgrlyLanding() {
           </p>
 
           <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <Input
+            {/* <Input
               type="email"
               placeholder="Enter your email address"
-              className="flex-3 px-4 py-3 border-orange-200 focus:border-orange-400 focus:ring-orange-400 bg-white/60"
+              className="flex-3 px-4 py-3 text-lg border-blue-200 focus:border-blue-400 focus:ring-blue-400 bg-white/60"
               required
-            />
-
+            /> */}
             <Button
               asChild
               type="submit"
-              className="flex-1 px-4 py-3 text-md font-semibold rounded-lg shadow-lg
-               bg-gradient-to-r from-orange-500 to-pink-500
-               hover:from-orange-600 hover:to-pink-600 text-white"
+              className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-semibold shadow-lg transform hover:scale-102 transition-all duration-200"
             >
-              <Link href="#Waitlist">Join Waitlist</Link>
+              <Link
+                href="https://forms.gle/oyB983VmKXCQFikV6"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Express Interest
+              </Link>
             </Button>
           </form>
 
@@ -529,12 +530,12 @@ export default function LedgrlyLanding() {
       </section>
 
       {/* Footer */}
-      <footer className="px-4 py-8 border-t border-orange-100 bg-white/80 backdrop-blur-sm">
+      <footer className="px-4 py-8 border-t border-blue-100 bg-white/80 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
+          <div className="flex items-center mb-4 md:mb-0">
+            <span className="w-8 h-8 flex items-center justify-center">
+              <Image src="/ledgrly.svg" alt="Ledgrly" width={64} height={64} />
+            </span>
             <span className="text-xl font-bold text-gray-900">Ledgrly</span>
           </div>
 
