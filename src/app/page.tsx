@@ -511,7 +511,7 @@ export default function Page() {
             <Button
               asChild
               type="submit"
-              className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-semibold shadow-lg transform hover:scale-102 transition-all duration-200"
+              className="flex-1 px-4 py-5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-semibold shadow-lg transform hover:scale-102 transition-all duration-200"
             >
               <Link
                 href="https://forms.gle/oyB983VmKXCQFikV6"
@@ -542,7 +542,7 @@ export default function Page() {
           <div className="max-w-6xl mx-auto text-center text-sm text-gray-500">
             <p>
               {/* <span>&copy; 2025 LedgrlyHQ.</span>{" "} */}
-              <span>Made with ❤️ for SMBs.</span>
+              <span>Made with ❤️ for sellers on Etsy.</span>
             </p>
             <p>
               Etsy is a trademark of Etsy, Inc. This product is unaffiliated and
