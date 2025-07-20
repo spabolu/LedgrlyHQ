@@ -54,6 +54,10 @@ export default function Page() {
         <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-indigo-200 to-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
+          <span className="inline-flex items-center px-3 py-0.5 rounded-full border-2 border-blue-200 text-sm font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 mb-1">
+            Coming Soon!
+          </span>
+
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
             Finally,{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">
