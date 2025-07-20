@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, FileText, Zap } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -487,7 +487,7 @@ export default function Page() {
       </section>
 
       {/* Waitlist CTA */}
-      <section className="px-4 py-16 relative" id="Waitlist">
+      <section className="px-4 py-16 relative" id="waitlist">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50"></div>
         <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
         <div className="absolute bottom-10 right-10 w-72 h-72 bg-gradient-to-r from-indigo-200 to-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
