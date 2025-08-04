@@ -4,70 +4,75 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { BarChart3, Package, FileText, Settings, Search, Download, Filter } from "lucide-react"
 import Link from "next/link"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import prisma from "@/lib/prisma"
 
-export default function TransactionsPage() {
-  const transactions = [
-    {
-      id: "TXN-001",
-      date: "2024-01-15",
+// ========= DATA FETCHING =========
+async function getMe(accessToken: string) {
+  const response = await fetch("https://api.etsy.com/v3/application/users/me", {
+    headers: { "x-api-key": process.env.ETSY_API_KEY!, Authorization: `Bearer ${accessToken}` },
+  })
+  if (!response.ok) return null
+  return response.json()
+}
+
+async function getShopReceipts(shopId: string, accessToken: string) {
+  const receipts = []
+  let offset = 0
+  const limit = 100
+  let hasMore = true
+  while (hasMore) {
+    const response = await fetch(
+      `https://api.etsy.com/v3/application/shops/${shopId}/receipts?limit=${limit}&offset=${offset}&was_paid=true`,
+      { headers: { "x-api-key": process.env.ETSY_API_KEY!, Authorization: `Bearer ${accessToken}` } }
+    )
+    if (!response.ok) throw new Error("Failed to fetch receipts")
+    const data = await response.json()
+    receipts.push(...(data.results || []))
+    if (data.results.length < limit || receipts.length >= 1000) {
+      hasMore = false
+    } else {
+      offset += limit
+    }
+  }
+  return receipts
+}
+
+// ========= DATA PROCESSING =========
+function processTransactions(receipts: any[]) {
+  return receipts.flatMap(r => 
+    r.transactions.map((t: any) => ({
+      id: t.transaction_id,
+      date: new Date(r.created_timestamp * 1000).toISOString(),
       type: "Sale",
-      description: "Handmade Ceramic Mug - Blue",
-      amount: 24.99,
-      fees: 2.5,
-      net: 22.49,
-      status: "Completed",
-    },
-    {
-      id: "TXN-002",
-      date: "2024-01-14",
-      type: "Sale",
-      description: "Knitted Wool Scarf - Red",
-      amount: 45.0,
-      fees: 4.5,
-      net: 40.5,
-      status: "Completed",
-    },
-    {
-      id: "TXN-003",
-      date: "2024-01-14",
-      type: "Expense",
-      description: "Ceramic Clay - 5lb bag",
-      amount: -15.99,
-      fees: 0,
-      net: -15.99,
-      status: "Recorded",
-    },
-    {
-      id: "TXN-004",
-      date: "2024-01-13",
-      type: "Sale",
-      description: "Custom Wood Sign - Family Name",
-      amount: 89.99,
-      fees: 8.99,
-      net: 81.0,
-      status: "Completed",
-    },
-    {
-      id: "TXN-005",
-      date: "2024-01-12",
-      type: "Sale",
-      description: "Silver Wire Earrings - Set of 3",
-      amount: 18.5,
-      fees: 1.85,
-      net: 16.65,
-      status: "Completed",
-    },
-    {
-      id: "TXN-006",
-      date: "2024-01-11",
-      type: "Expense",
-      description: "Shipping Supplies - Bubble Mailers",
-      amount: -24.99,
-      fees: 0,
-      net: -24.99,
-      status: "Recorded",
-    },
-  ]
+      description: t.title,
+      amount: t.price.amount / t.price.divisor,
+      fees: (t.price.amount / t.price.divisor) * 0.10,
+      net: (t.price.amount / t.price.divisor) * 0.90,
+      status: r.status === 'completed' ? 'Completed' : 'Shipped',
+    }))
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export default async function TransactionsPage() {
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get("etsy_access_token")?.value
+  if (!accessToken) redirect("/onboarding")
+
+  const me = await getMe(accessToken)
+  if (!me) redirect("/api/auth/logout")
+
+  const user = await prisma.user.findUnique({
+    where: { etsyUserId: me.user_id.toString() },
+    include: { shop: true },
+  })
+  if (!user || !user.shop) redirect("/api/auth/logout");
+
+  const shop = user.shop;
+
+  const receipts = await getShopReceipts(shop.etsyShopId, shop.accessToken)
+  const transactions = processTransactions(receipts)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
@@ -91,9 +96,9 @@ export default function TransactionsPage() {
             </Link>
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">S</span>
+                <span className="text-white text-sm font-semibold">{user.firstName?.[0] || 'S'}</span>
               </div>
-              <span className="text-sm font-medium text-gray-700">Sarah</span>
+              <span className="text-sm font-medium text-gray-700">{user.firstName || 'Sarah'}</span>
             </div>
           </div>
         </div>
@@ -131,7 +136,6 @@ export default function TransactionsPage() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between">
               <div>
@@ -145,7 +149,6 @@ export default function TransactionsPage() {
             </div>
           </div>
 
-          {/* Filters */}
           <Card className="border border-blue-100 mb-6">
             <CardContent className="p-4">
               <div className="flex items-center space-x-4">
@@ -161,10 +164,9 @@ export default function TransactionsPage() {
             </CardContent>
           </Card>
 
-          {/* Transactions Table */}
           <Card className="border border-blue-100">
             <CardHeader>
-              <CardTitle>Recent Transactions</CardTitle>
+              <CardTitle>All Transactions</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -187,26 +189,20 @@ export default function TransactionsPage() {
                         <td className="py-3">
                           <Badge
                             variant={transaction.type === "Sale" ? "default" : "secondary"}
-                            className={
-                              transaction.type === "Sale" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                            }
+                            className="bg-green-100 text-green-700"
                           >
                             {transaction.type}
                           </Badge>
                         </td>
                         <td className="py-3 font-medium">{transaction.description}</td>
-                        <td className="py-3 text-right font-medium">
-                          <span className={transaction.amount > 0 ? "text-green-600" : "text-red-600"}>
-                            ${Math.abs(transaction.amount).toFixed(2)}
-                          </span>
+                        <td className="py-3 text-right font-medium text-green-600">
+                          ${transaction.amount.toFixed(2)}
                         </td>
                         <td className="py-3 text-right text-gray-600">
-                          {transaction.fees > 0 ? `$${transaction.fees.toFixed(2)}` : "-"}
+                          ${transaction.fees.toFixed(2)}
                         </td>
-                        <td className="py-3 text-right font-bold">
-                          <span className={transaction.net > 0 ? "text-green-600" : "text-red-600"}>
-                            ${Math.abs(transaction.net).toFixed(2)}
-                          </span>
+                        <td className="py-3 text-right font-bold text-green-600">
+                          ${transaction.net.toFixed(2)}
                         </td>
                         <td className="py-3 text-center">
                           <Badge variant="outline" className="text-xs">

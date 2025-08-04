@@ -71,7 +71,7 @@ export function PricingSection() {
           </Card>
 
           {/* Professional Plan */}
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 relative border-2 border-blue-200 flex flex-col">
+          <Card className="shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 relative border-2 border-blue-200 flex flex-col">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-1 rounded-full text-sm font-medium">
                 Best Value

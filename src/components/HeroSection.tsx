@@ -18,13 +18,14 @@ export function HeroSection() {
                 </h1>
 
                 <p className="text-lg md:text-xl text-gray-600 mb-4 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Connect your shop, track your expenses, and get tax-ready in
-                  minutes — no manual spreadsheets or CSV imports required.
+                  Connect your shop and get tax-ready in minutes — automatically
+                  track expenses, calculate taxes, and organize your Etsy
+                  finances without spreadsheets or CSVs.
                 </p>
 
-                <p className="text-blue-600 font-semibold mb-8 text-lg">
+                {/* <p className="text-blue-600 font-semibold mb-8 text-lg">
                   (Built for small business owners!)
-                </p>
+                </p> */}
 
                 <div className="flex justify-center lg:justify-start">
                   <Button
@@ -335,4 +336,4 @@ export function HeroSection() {
       </div>
     </section>
   );
-} 
+}

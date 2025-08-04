@@ -4,70 +4,120 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { BarChart3, Package, FileText, Settings, Search, Plus, Eye } from "lucide-react"
 import Link from "next/link"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import prisma from "@/lib/prisma"
 
-export default function ProductsPage() {
-  const products = [
-    {
-      id: "PROD-001",
-      name: "Handmade Ceramic Mug",
-      sku: "MUG-BLUE-001",
-      unitsSold: 47,
-      revenue: 1174.53,
-      cogs: 587.0,
-      profit: 587.53,
-      profitMargin: 50.0,
-      avgPrice: 24.99,
-      status: "Active",
-    },
-    {
-      id: "PROD-002",
-      name: "Knitted Wool Scarf",
-      sku: "SCARF-RED-001",
-      unitsSold: 23,
-      revenue: 1035.0,
-      cogs: 603.75,
-      profit: 431.25,
-      profitMargin: 41.7,
-      avgPrice: 45.0,
-      status: "Active",
-    },
-    {
-      id: "PROD-003",
-      name: "Custom Wood Sign",
-      sku: "SIGN-CUSTOM-001",
-      unitsSold: 12,
-      revenue: 1079.88,
-      cogs: 695.88,
-      profit: 384.0,
-      profitMargin: 35.6,
-      avgPrice: 89.99,
-      status: "Active",
-    },
-    {
-      id: "PROD-004",
-      name: "Silver Wire Earrings",
-      sku: "EARR-SILVER-001",
-      unitsSold: 89,
-      revenue: 1646.5,
-      cogs: 1268.25,
-      profit: 378.25,
-      profitMargin: 23.0,
-      avgPrice: 18.5,
-      status: "Active",
-    },
-    {
-      id: "PROD-005",
-      name: "Macrame Plant Hanger",
-      sku: "HANG-PLANT-001",
-      unitsSold: 31,
-      revenue: 899.0,
-      cogs: 623.1,
-      profit: 275.9,
-      profitMargin: 30.7,
-      avgPrice: 29.0,
-      status: "Low Stock",
-    },
-  ]
+// ========= DATA FETCHING =========
+async function getMe(accessToken: string) {
+  const response = await fetch("https://api.etsy.com/v3/application/users/me", {
+    headers: { "x-api-key": process.env.ETSY_API_KEY!, Authorization: `Bearer ${accessToken}` },
+  })
+  if (!response.ok) return null
+  return response.json()
+}
+
+async function getActiveListingsWithStats(shopId: string, accessToken: string) {
+  const listings = []
+  let offset = 0
+  const limit = 100
+  let hasMore = true
+
+  while (hasMore) {
+    const response = await fetch(
+      `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=${limit}&offset=${offset}&includes=Images`,
+      { headers: { "x-api-key": process.env.ETSY_API_KEY!, Authorization: `Bearer ${accessToken}` } }
+    )
+    if (!response.ok) throw new Error("Failed to fetch listings")
+    const data = await response.json()
+    listings.push(...(data.results || []))
+    if (data.results.length < limit) {
+      hasMore = false
+    } else {
+      offset += limit
+    }
+  }
+
+  const receipts = []
+  let receiptsOffset = 0
+  const receiptsLimit = 100
+  let receiptsHasMore = true
+
+  while (receiptsHasMore) {
+    const receiptsResponse = await fetch(
+      `https://api.etsy.com/v3/application/shops/${shopId}/receipts?limit=${receiptsLimit}&offset=${receiptsOffset}&was_paid=true`,
+      { headers: { "x-api-key": process.env.ETSY_API_KEY!, Authorization: `Bearer ${accessToken}` } }
+    )
+    if (!receiptsResponse.ok) throw new Error("Failed to fetch receipts for stats")
+    
+    const receiptsData = await receiptsResponse.json()
+    receipts.push(...(receiptsData.results || []))
+    
+    if (receiptsData.results.length < receiptsLimit) {
+      receiptsHasMore = false
+    } else {
+      receiptsOffset += receiptsLimit
+    }
+  }
+
+  const stats: { [key: string]: { unitsSold: number; revenue: number } } = {}
+
+  receipts.forEach((r: any) => {
+    r.transactions.forEach((t: any) => {
+      if (!stats[t.listing_id]) {
+        stats[t.listing_id] = { unitsSold: 0, revenue: 0 }
+      }
+      stats[t.listing_id].unitsSold += t.quantity
+      stats[t.listing_id].revenue += t.price.amount / t.price.divisor
+    })
+  })
+
+  return listings.map((l: any) => ({
+    ...l,
+    stats: stats[l.listing_id] || { unitsSold: 0, revenue: 0 },
+  }))
+}
+
+// ========= DATA PROCESSING =========
+function processProducts(listings: any[]) {
+  return listings.map(l => {
+    const revenue = l.stats.revenue
+    const cogs = revenue * 0.45
+    const profit = revenue - cogs - (revenue * 0.10)
+    const profitMargin = revenue > 0 ? (profit / revenue) * 100 : 0
+    
+    return {
+      id: l.listing_id,
+      name: l.title,
+      sku: l.sku?.[0] || 'N/A',
+      unitsSold: l.stats.unitsSold,
+      revenue,
+      cogs,
+      profit,
+      profitMargin,
+      status: l.state === 'active' ? 'Active' : 'Inactive',
+    }
+  }).sort((a, b) => b.profit - a.profit);
+}
+
+export default async function ProductsPage() {
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get("etsy_access_token")?.value
+  if (!accessToken) redirect("/onboarding")
+
+  const me = await getMe(accessToken)
+  if (!me) redirect("/api/auth/logout")
+
+  const user = await prisma.user.findUnique({
+    where: { etsyUserId: me.user_id.toString() },
+    include: { shop: true },
+  })
+  if (!user || !user.shop) redirect("/api/auth/logout");
+  
+  const shop = user.shop;
+
+  const listingsWithStats = await getActiveListingsWithStats(shop.etsyShopId, shop.accessToken)
+  const products = processProducts(listingsWithStats)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
@@ -91,9 +141,9 @@ export default function ProductsPage() {
             </Link>
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">S</span>
+                <span className="text-white text-sm font-semibold">{user.firstName?.[0] || 'S'}</span>
               </div>
-              <span className="text-sm font-medium text-gray-700">Sarah</span>
+              <span className="text-sm font-medium text-gray-700">{user.firstName || 'Sarah'}</span>
             </div>
           </div>
         </div>
@@ -131,7 +181,6 @@ export default function ProductsPage() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between">
               <div>
@@ -145,7 +194,6 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          {/* Search */}
           <Card className="border border-blue-100 mb-6">
             <CardContent className="p-4">
               <div className="relative max-w-md">
@@ -155,7 +203,6 @@ export default function ProductsPage() {
             </CardContent>
           </Card>
 
-          {/* Products Table */}
           <Card className="border border-blue-100">
             <CardHeader>
               <CardTitle>Product Performance</CardTitle>
@@ -168,9 +215,9 @@ export default function ProductsPage() {
                       <th className="text-left py-3 font-medium">Product</th>
                       <th className="text-center py-3 font-medium">Units Sold</th>
                       <th className="text-right py-3 font-medium">Revenue</th>
-                      <th className="text-right py-3 font-medium">COGS</th>
-                      <th className="text-right py-3 font-medium">Profit</th>
-                      <th className="text-center py-3 font-medium">Margin</th>
+                      <th className="text-right py-3 font-medium">Est. COGS</th>
+                      <th className="text-right py-3 font-medium">Est. Profit</th>
+                      <th className="text-center py-3 font-medium">Est. Margin</th>
                       <th className="text-center py-3 font-medium">Status</th>
                       <th className="text-center py-3 font-medium">Actions</th>
                     </tr>
@@ -205,11 +252,7 @@ export default function ProductsPage() {
                         <td className="py-3 text-center">
                           <Badge
                             variant={product.status === "Active" ? "default" : "secondary"}
-                            className={
-                              product.status === "Active"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-yellow-100 text-yellow-700"
-                            }
+                            className="bg-green-100 text-green-700"
                           >
                             {product.status}
                           </Badge>

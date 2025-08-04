@@ -1,3 +1,5 @@
+"use client" // Add this at the top
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -6,8 +8,50 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { BarChart3, Package, FileText, Settings, Check, AlertCircle, ExternalLink } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState, useTransition } from "react"
+import { syncEtsyData } from "./actions"
+
+// Note: We are keeping the page as a server component and wrapping the interactive parts
+// in a client component to use hooks. For simplicity in this step, we'll make the page a client component.
 
 export default function SettingsPage() {
+  const [me, setMe] = useState<any>(null)
+  const [shop, setShop] = useState<any>(null)
+  const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    // Fetch initial data on the client side
+    async function fetchData() {
+      const res = await fetch('/api/get-settings-data') // We will create this API route
+      const data = await res.json()
+      setMe(data.me)
+      setShop(data.shop)
+    }
+    fetchData()
+  }, [])
+
+  const handleSync = () => {
+    startTransition(() => {
+      syncEtsyData()
+    })
+  }
+
+  const handleManageSubscription = async () => {
+    const response = await fetch('/api/stripe/create-portal-session', {
+      method: 'POST',
+    });
+    const { url } = await response.json();
+    window.location.href = url;
+  };
+  
+  if (!me) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading settings...
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
@@ -28,9 +72,9 @@ export default function SettingsPage() {
             </Button>
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">S</span>
+                <span className="text-white text-sm font-semibold">{me.first_name?.[0] || 'S'}</span>
               </div>
-              <span className="text-sm font-medium text-gray-700">Sarah</span>
+              <span className="text-sm font-medium text-gray-700">{me.first_name || 'Sarah'}</span>
             </div>
           </div>
         </div>
@@ -68,56 +112,63 @@ export default function SettingsPage() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
             <p className="text-gray-600 mt-1">Manage your account and shop connections</p>
           </div>
 
           <div className="space-y-6">
-            {/* Shop Connection */}
             <Card className="border border-blue-100">
-              <CardHeader>
-                <CardTitle>Shop Connection</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">E</span>
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">Sarah&apos;s Handmade Shop</div>
-                      <div className="text-sm text-gray-600">Connected to Etsy</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge className="bg-green-100 text-green-700">
-                      <Check className="w-3 h-3 mr-1" />
-                      Connected
-                    </Badge>
-                    <Button variant="outline" size="sm">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Shop
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="text-sm text-gray-600">
-                  <p>Last sync: 2 hours ago</p>
-                  <p>Next sync: In 4 hours</p>
-                </div>
-
-                <div className="flex space-x-3">
-                  <Button variant="outline">Sync Now</Button>
-                  <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent">
-                    Disconnect
-                  </Button>
-                </div>
-              </CardContent>
+                <CardHeader>
+                    <CardTitle>Subscription</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Button onClick={handleManageSubscription}>Manage Subscription</Button>
+                </CardContent>
             </Card>
+            {shop && (
+              <Card className="border border-blue-100">
+                <CardHeader>
+                  <CardTitle>Shop Connection</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">E</span>
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{shop.shop_name}</div>
+                        <div className="text-sm text-gray-600">Connected to Etsy</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className="bg-green-100 text-green-700">
+                        <Check className="w-3 h-3 mr-1" />
+                        Connected
+                      </Badge>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={shop.url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          View Shop
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex space-x-3">
+                    <Button variant="outline" onClick={handleSync} disabled={isPending}>
+                      {isPending ? "Syncing..." : "Sync Now"}
+                    </Button>
+                    <Link href="/api/auth/logout">
+                      <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent">
+                        Disconnect
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-            {/* Profile Settings */}
             <Card className="border border-blue-100">
               <CardHeader>
                 <CardTitle>Profile Settings</CardTitle>
@@ -126,31 +177,21 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" defaultValue="Sarah" />
+                    <Input id="firstName" value={me.first_name || ''} readOnly />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" defaultValue="Johnson" />
+                    <Input id="lastName" value={me.last_name || ''} readOnly />
                   </div>
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" type="email" defaultValue="sarah@example.com" />
+                  <Input id="email" type="email" value={me.primary_email || ''} readOnly />
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="timezone">Timezone</Label>
-                  <Input id="timezone" defaultValue="Eastern Time (ET)" />
-                </div>
-
-                <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700">
-                  Save Changes
-                </Button>
+                <p className="text-xs text-gray-500">Profile information is synced from your Etsy account and cannot be edited here.</p>
               </CardContent>
             </Card>
 
-            {/* Notification Settings */}
             <Card className="border border-blue-100">
               <CardHeader>
                 <CardTitle>Notifications</CardTitle>
@@ -163,88 +204,25 @@ export default function SettingsPage() {
                   </div>
                   <Switch defaultChecked />
                 </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">Weekly Reports</div>
-                    <div className="text-sm text-gray-600">Get a weekly summary of your business performance</div>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">Tax Reminders</div>
-                    <div className="text-sm text-gray-600">Reminders for quarterly tax deadlines</div>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">Low Stock Alerts</div>
-                    <div className="text-sm text-gray-600">Get notified when product inventory is low</div>
-                  </div>
-                  <Switch />
-                </div>
               </CardContent>
             </Card>
 
-            {/* Tax Settings */}
-            <Card className="border border-blue-100">
-              <CardHeader>
-                <CardTitle>Tax Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="taxId">Tax ID / EIN</Label>
-                  <Input id="taxId" placeholder="Enter your Tax ID or EIN" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="businessName">Business Name</Label>
-                  <Input id="businessName" defaultValue="Sarah&apos;s Handmade Crafts" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="businessAddress">Business Address</Label>
-                  <Input id="businessAddress" placeholder="Enter your business address" />
-                </div>
-
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="flex items-start space-x-2">
-                    <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
-                    <div className="text-sm text-blue-700">
-                      <p className="font-medium">Tax Compliance Note</p>
-                      <p>
-                        Consult with a tax professional for specific advice about your business structure and tax
-                        obligations.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700">
-                  Save Tax Settings
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Account Actions */}
             <Card className="border border-red-200">
               <CardHeader>
                 <CardTitle className="text-red-700">Danger Zone</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
                 <div className="p-4 bg-red-50 rounded-lg border border-red-200">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-red-700">Delete Account</div>
                       <div className="text-sm text-red-600">Permanently delete your account and all data</div>
                     </div>
-                    <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent">
-                      Delete Account
-                    </Button>
+                    <Link href="/api/auth/logout">
+                      <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent">
+                        Delete Account
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </CardContent>

@@ -68,7 +68,11 @@ async function getShop(userId: number, accessToken: string) {
   return null;
 }
 
-export default async function OnboardingStep3Page() {
+export default async function OnboardingStep4Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('etsy_access_token')?.value;
 
@@ -85,6 +89,8 @@ export default async function OnboardingStep3Page() {
   if (!shop) {
     redirect('/onboarding');
   }
+
+  const showSuccess = searchParams.session_id;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
@@ -104,6 +110,13 @@ export default async function OnboardingStep3Page() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-12">
+        {showSuccess && (
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8 rounded-md" role="alert">
+            <p className="font-bold">Payment Successful!</p>
+            <p>Welcome to Ledgrly Pro. Your subscription is now active.</p>
+          </div>
+        )}
+
         {/* Progress Indicator */}
         <div className="mb-12">
           <div className="flex items-center justify-center space-x-8">
@@ -309,10 +322,10 @@ export default async function OnboardingStep3Page() {
 
         {/* Navigation */}
         <div className="flex items-center justify-between">
-          <Link href="/onboarding/step-2">
+          <Link href="/onboarding/step-3">
             <Button variant="outline" className="flex items-center space-x-2">
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Step 2</span>
+              <span>Back to Step 3</span>
             </Button>
           </Link>
           
